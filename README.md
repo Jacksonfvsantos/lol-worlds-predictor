@@ -1,5 +1,4 @@
 # lol-worlds-predictor
-<<<<<<< HEAD
 
 TCC: modelo de força de times de League of Legends profissional, validado
 retroativamente contra edições passadas do Worlds, e aplicado ao vivo à
@@ -76,6 +75,3 @@ Isso cria `data/processed/lol_esports.db` com três tabelas normalizadas:
 4. Repetir o processo em 2027 com dados atualizados como aplicação ao vivo.
 
 Ver `docs/reading-list.md` para a bibliografia que sustenta essas decisões.
-=======
-Projeto para predição de partidas competitivas de League of Legends
->>>>>>> 8393e1d1fa54aac42dd8a60bd953b3d2f3d6e683

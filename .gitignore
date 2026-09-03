@@ -1,0 +1,15 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+data/processed/*.db
+data/raw/oracles_elixir/*.csv
+!data/raw/oracles_elixir/.gitkeep
+!data/processed/.gitkeep
+
+.vscode/
+.idea/
+.DS_Store

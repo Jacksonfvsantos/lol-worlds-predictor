@@ -6,10 +6,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Onde ficam os CSVs anuais baixados manualmente do Oracle's Elixir
 # (https://oracleselixir.com/tools/downloads)
-OE_RAW_DIR = BASE_DIR / "data" / "raw" / "oracles_elixir"
+#
+# Local: pasta dentro do próprio projeto.
+# Colab: pasta no Google Drive montado, para persistir entre sessões.
+try:
+    import google.colab  # noqa: F401
+    OE_RAW_DIR = Path("/content/drive/MyDrive/tcc-dados")
+except ImportError:
+    OE_RAW_DIR = BASE_DIR / "data" / "raw" / "oracles_elixir"
+
 
 # Banco SQLite consolidado (times, partidas, jogadores)
-SQLITE_PATH = BASE_DIR / "data" / "processed" / "lol_esports.db"
+#
+# Colab: fica no Drive também, senão some toda vez que a sessão expira
+# e você tem que rodar a ingestão de novo do zero.
+try:
+    import google.colab  # noqa: F401
+    SQLITE_PATH = Path("/content/drive/MyDrive/tcc-dados/lol_esports.db")
+except ImportError:
+    SQLITE_PATH = BASE_DIR / "data" / "processed" / "lol_esports.db"
 
 # Ligas consideradas "principais" (mandam representantes ao Worlds).
 # Os nomes seguem exatamente a coluna `league` do Oracle's Elixir.

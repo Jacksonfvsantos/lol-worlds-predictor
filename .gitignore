@@ -1,15 +1,31 @@
+# Ambientes virtuais e variáveis de ambiente
 .env
 .venv/
 venv/
+
+# Cache do Python, testes e Jupyter Notebooks
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 .pytest_cache/
+.ipynb_checkpoints/
 
-data/processed/*.db
-data/raw/oracles_elixir/*.csv
-!data/raw/oracles_elixir/.gitkeep
-!data/processed/.gitkeep
+# Dados pesados e modelos de Machine Learning (Armazenados no Google Drive)
+*.csv
+*.pkl
+*.sqlite3
+*.db
+data/*
+!data/.gitkeep
 
+# Pastas temporárias do Google Colab
+.config/
+sample_data/
+drive/
+
+# IDEs e ficheiros do sistema operativo
 .vscode/
 .idea/
 .DS_Store
+Thumbs.db

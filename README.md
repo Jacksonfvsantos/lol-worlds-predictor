@@ -1,77 +1,44 @@
 # lol-worlds-predictor
 
-TCC: modelo de força de times de League of Legends profissional, validado
-retroativamente contra edições passadas do Worlds, e aplicado ao vivo à
-edição de 2027.
+**TCC (Engenharia da Computação - Unijorge):** Modelo preditivo de Machine Learning para simulação de resultados do *League of Legends World Championship* (Worlds 2027), baseado em métricas de *early game*, *macro game* e taxas de vitória sazonais.
 
-## Status atual
+---
 
-Este projeto está na **fase de ingestão de dados**. A modelagem (rating de
-times e simulação de torneio) está deliberadamente deixada como stub —
-ver `docs/reading-list.md` para o plano de leitura teórica que precede a
-implementação dessa parte.
+## 📌 Status do Projeto
 
-## Fonte de dados
+- [x] **Ingestão de Dados:** Leitura e consolidação de históricos sazonais do Oracle's Elixir em Pandas DataFrames.
+- [x] **Engenharia de Recursos (Feature Engineering):** Agrupamento por equipe e extração de deltas de performance (`golddiffat15`, `firstblood`, `firstdragon`, `firsttower`, `vspm`, `winrate`).
+- [x] **Modelagem Preditiva:** Algoritmo de Regressão Logística treinado com **~62,7% de acurácia** em mais de 25.000 confrontos históricos. Modelo persistido via `joblib`.
+- [x] **Integração em Tempo Real:** Consulta dinâmica de chaveamentos e elencos na API Cargo da Leaguepedia (`mwclient`).
+- [x] **Tratamento de Divergências:** Mapeamento de nomes de equipes (*aliasing*) para padronização entre fontes de dados.
+- [ ] **Próxima Etapa:** Desenvolvimento do simulador do torneio (Fase Suíça e Playoffs) via método de Monte Carlo.
 
-- **[Oracle's Elixir](https://oracleselixir.com/tools/downloads)** — dados
-  de partida profissional de LoL desde 2014, atualizados diariamente,
-  distribuídos como CSV anual. Baixe os anos que interessam (recomendo
-  pelo menos 2018 em diante, para cobrir várias edições de Worlds) e
-  coloque os arquivos em `data/raw/oracles_elixir/`.
-- **[Leaguepedia](https://lol.fandom.com/)** (via pacote `hextech`) — usado
-  mais adiante para brackets e rosters atualizados de 2027, que o Oracle's
-  Elixir não cobre antes da temporada acontecer.
+---
 
-## Estrutura
+## 🛠️ Stack Tecnológica & Arquitetura
 
-```
+- **Ambiente de Execução:** Google Colab
+- **Armazenamento de Dados e Modelos:** Google Drive (arquivos `.csv` brutos e modelo `.pkl`)
+- **Linguagem:** Python 3.10+
+- **Análise & Manipulação de Dados:** `pandas`, `numpy`
+- **Machine Learning:** `scikit-learn` (Regressão Logística), `joblib`
+- **Integração Web:** `mwclient` (com trava `urllib3<2.0.0` para compatibilidade com a API MediaWiki/Cargo da Leaguepedia)
+- **Controle de Versão:** GitHub
+
+---
+
+## 📁 Estrutura do Repositório
+
+```text
 lol-worlds-predictor/
-├── data/
-│   ├── raw/oracles_elixir/   # CSVs anuais baixados manualmente
-│   └── processed/            # banco SQLite consolidado
-├── docs/
-│   └── reading-list.md       # plano de leitura teórica
+├── .gitignore
+├── README.md
+├── requirements.txt
+├── notebooks/
+│   └── worlds_predictor_pipeline.ipynb   # Pipeline principal do Colab
 ├── src/
-│   ├── config.py
-│   ├── ingestion/
-│   │   ├── oracle_elixir_loader.py   # ETL do CSV para o SQLite
-│   │   └── leaguepedia_client.py     # wrapper sobre o Leaguepedia
-│   ├── db/
-│   │   ├── schema.sql         # games / team_game_stats / player_game_stats / team_ratings
-│   │   └── database.py
-│   ├── rating/
-│   │   └── elo.py             # STUB — implementar após leitura teórica
-│   └── simulation/
-│       └── bracket_simulator.py  # STUB — implementar após leitura teórica
-├── main.py
-└── requirements.txt
-```
-
-## Como rodar a ingestão
-
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-
-# baixe manualmente os CSVs de https://oracleselixir.com/tools/downloads
-# e coloque em data/raw/oracles_elixir/
-
-python main.py
-```
-
-Isso cria `data/processed/lol_esports.db` com três tabelas normalizadas:
-`games` (1 linha por jogo), `team_game_stats` (2 linhas por jogo) e
-`player_game_stats` (10 linhas por jogo).
-
-## Próximos passos (depois da leitura teórica)
-
-1. Implementar `src/rating/elo.py` (ou trocar por Bradley-Terry, conforme
-   a leitura indicar) e rodar sobre o histórico consolidado.
-2. Fazer o backtest: para cada Worlds de 2018 a 2026, calcular o rating
-   dos times classificados na véspera do torneio e comparar com o
-   resultado real.
-3. Implementar `src/simulation/bracket_simulator.py` (Monte Carlo sobre o
-   bracket).
-4. Repetir o processo em 2027 com dados atualizados como aplicação ao vivo.
-
-Ver `docs/reading-list.md` para a bibliografia que sustenta essas decisões.
+│   ├── data_loader.py                   # Módulos reutilizáveis (opcional)
+│   ├── feature_engineering.py
+│   └── predictor.py
+└── data/
+    └── .gitkeep                         # Mantém a pasta no Git sem subir CSVs
